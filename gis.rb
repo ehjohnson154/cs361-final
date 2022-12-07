@@ -69,8 +69,6 @@ end
 
 class Waypoint
 
-
-
 attr_reader :lat, :lon, :ele, :name, :type
 
   def initialize(lon, lat, ele=nil, name=nil, type=nil)
