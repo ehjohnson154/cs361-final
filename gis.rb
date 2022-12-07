@@ -6,7 +6,7 @@ class Track
     @segments = segments
   end
 
-  def get_track_json()
+  def get_track_json() #returns a string of all the waypoint data in the track segments.
     j = '{'
     j += '"type": "Feature", '
     if @name != nil
@@ -43,6 +43,7 @@ class Track
     j + ']}}'
   end
 end
+
 class TrackSegment 
   attr_reader :coordinates
   def initialize(coordinates)
@@ -60,9 +61,8 @@ attr_reader :lat, :lon, :ele, :name, :type
     @type = type
   end
 
-  def get_waypoint_json(indent=0) 
+  def get_waypoint_json(indent=0) #returns a string of the waypoint info
     j = '{"type": "Feature",'
-    # if name is not nil or type is not nil
     j += '"geometry": {"type": "Point","coordinates": '
     j += "[#{@lon},#{@lat}"
     if ele != nil
@@ -74,11 +74,11 @@ attr_reader :lat, :lon, :ele, :name, :type
       if name != nil
         j += '"title": "' + @name + '"'
       end
-      if type != nil  # if type is not nil
+      if type != nil  
         if name != nil
           j += ','
         end
-        j += '"icon": "' + @type + '"'  # type is the icon
+        j += '"icon": "' + @type + '"'  
       end
       j += '}'
     end
@@ -88,16 +88,16 @@ attr_reader :lat, :lon, :ele, :name, :type
 end
 
 class World
-def initialize(name, things)
+def initialize(name, features)
   @name = name
-  @features = things
+  @features = features
 end
-  def add_feature(f)
-    @features.append(t)
+
+  def add_feature(feature)
+    @features.append(feature)
   end
 
-  def to_geojson(indent=0)
-    # Write stuff
+  def to_geojson(indent=0) #prints  all the features of the world
     s = '{"type": "FeatureCollection","features": ['
     @features.each_with_index do |f,i|
       if i != 0
@@ -114,9 +114,11 @@ end
 end
 
 def main()
+  #create waypoint flags
   home = Waypoint.new(-121.5, 45.5, 30, "home", "flag")
   store = Waypoint.new(-121.5, 45.6, nil, "store", "dot") 
 
+  #create tracks
   segment1 = TrackSegment.new([ Waypoint.new(-122, 45), Waypoint.new(-122, 46),Waypoint.new(-121, 46)])
   segment2= TrackSegment.new([Waypoint.new(-121, 45), Waypoint.new(-121, 46)])
   segment3 = TrackSegment.new([Waypoint.new(-121, 45.5), Waypoint.new(-122, 45.5) ])
@@ -124,7 +126,8 @@ def main()
   track1 = Track.new([segment1, segment2], "track 1") 
   track2 = Track.new([segment3], "track 2") 
 
-  world = World.new("My Data", [home, store, track1, track2]) #creates world out of waypoints, and tracks
+  #create world
+  world = World.new("My Data", [home, store, track1, track2]) 
   puts world.to_geojson()
 end
 
