@@ -3,15 +3,9 @@
 class Track
   def initialize(segments, name=nil)
     @name = name
-    segment_objects = []
-    segments.each do |s|
-      segment_objects.append(TrackSegment.new(s)) #passed 1 or more arrays of point objects
-    end
-    # set segments to segment_objects
-    @segments = segment_objects
+    @segments = segments
   end
 
-  #DONT CHANGE THIS
   def get_track_json()
     j = '{'
     j += '"type": "Feature", '
@@ -49,7 +43,7 @@ class Track
     j + ']}}'
   end
 end
-class TrackSegment #only used by track
+class TrackSegment 
   attr_reader :coordinates
   def initialize(coordinates)
     @coordinates = coordinates
@@ -57,9 +51,7 @@ class TrackSegment #only used by track
 end
 
 class Waypoint
-
 attr_reader :lat, :lon, :ele, :name, :type
-
   def initialize(lon, lat, ele=nil, name=nil, type=nil)
     @lat = lat
     @lon = lon
@@ -68,7 +60,6 @@ attr_reader :lat, :lon, :ele, :name, :type
     @type = type
   end
 
-  #DONT CHANGE THIS
   def get_waypoint_json(indent=0) 
     j = '{"type": "Feature",'
     # if name is not nil or type is not nil
@@ -123,19 +114,17 @@ end
 end
 
 def main()
-  home = Waypoint.new(-121.5, 45.5, 30, "home", "flag") #assigns new waypoint details
+  home = Waypoint.new(-121.5, 45.5, 30, "home", "flag")
   store = Waypoint.new(-121.5, 45.6, nil, "store", "dot") 
 
-  segment1 = [ Waypoint.new(-122, 45), Waypoint.new(-122, 46),Waypoint.new(-121, 46)]
-  segment2= [ Waypoint.new(-121, 45), Waypoint.new(-121, 46) ]
-  segment3 = [Waypoint.new(-121, 45.5), Waypoint.new(-122, 45.5) ]
+  segment1 = TrackSegment.new([ Waypoint.new(-122, 45), Waypoint.new(-122, 46),Waypoint.new(-121, 46)])
+  segment2= TrackSegment.new([Waypoint.new(-121, 45), Waypoint.new(-121, 46)])
+  segment3 = TrackSegment.new([Waypoint.new(-121, 45.5), Waypoint.new(-122, 45.5) ])
 
-  track1 = Track.new([segment1, segment2], "track 1") #creates cracks out of points
-  track2 = Track.new([segment3], "track 2") #why do we need to create points for tracks 
-                                  # instead of just passing it into tracks?
+  track1 = Track.new([segment1, segment2], "track 1") 
+  track2 = Track.new([segment3], "track 2") 
 
   world = World.new("My Data", [home, store, track1, track2]) #creates world out of waypoints, and tracks
-
   puts world.to_geojson()
 end
 
