@@ -56,7 +56,6 @@ class TrackSegment #only used by track
   end
 end
 
-
 class Waypoint
 
 attr_reader :lat, :lon, :ele, :name, :type
@@ -124,26 +123,18 @@ end
 end
 
 def main()
-  w = Waypoint.new(-121.5, 45.5, 30, "home", "flag") #assigns new waypoint details
-  w2 = Waypoint.new(-121.5, 45.6, nil, "store", "dot") 
-  ts1 = [ 
-  Waypoint.new(-122, 45),
-  Waypoint.new(-122, 46),
-  Waypoint.new(-121, 46),
-  ]
+  home = Waypoint.new(-121.5, 45.5, 30, "home", "flag") #assigns new waypoint details
+  store = Waypoint.new(-121.5, 45.6, nil, "store", "dot") 
 
-  ts2 = [ Waypoint.new(-121, 45), Waypoint.new(-121, 46), ]
+  segment1 = [ Waypoint.new(-122, 45), Waypoint.new(-122, 46),Waypoint.new(-121, 46)]
+  segment2= [ Waypoint.new(-121, 45), Waypoint.new(-121, 46) ]
+  segment3 = [Waypoint.new(-121, 45.5), Waypoint.new(-122, 45.5) ]
 
-  ts3 = [
-    Waypoint.new(-121, 45.5),
-    Waypoint.new(-122, 45.5),
-  ]
-
-  t = Track.new([ts1, ts2], "track 1") #creates cracks out of points
-  t2 = Track.new([ts3], "track 2") #why do we need to create points for tracks 
+  track1 = Track.new([segment1, segment2], "track 1") #creates cracks out of points
+  track2 = Track.new([segment3], "track 2") #why do we need to create points for tracks 
                                   # instead of just passing it into tracks?
 
-  world = World.new("My Data", [w, w2, t, t2]) #creates world out of waypoints, and tracks
+  world = World.new("My Data", [home, store, track1, track2]) #creates world out of waypoints, and tracks
 
   puts world.to_geojson()
 end
